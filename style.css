@@ -1,0 +1,56 @@
+body {
+    font-family: 'Merriweather', serif;
+	text-rendering: optimizeLegibility;
+
+	-webkit-font-variant-ligatures: common-ligatures;
+	font-variant-ligatures: common-ligatures;
+
+    background-color: black;
+    text-align: center;
+
+    margin: 0 10px 0 10px;
+}
+
+#wrapper {
+  margin: 0 auto 2rem auto;
+}
+
+h1 {
+	color: white;
+	font-weight: 300;
+	font-style: italic;
+	font-size: 2rem;
+	margin: 2rem 0 2rem 0;
+}
+
+h2 {
+	color: white;
+	font-weight: 400; 
+	font-style: italic; 
+	font-size: 1rem;
+	margin: 1rem 0 1rem 0;
+}
+
+.town-div {
+	padding: 0 0 10rem 0;
+}
+
+.town-img {
+  margin: 3rem auto 3rem auto;
+}
+
+.overview-map-img {
+  padding: 0 0 2rem 0;
+  margin: 0 auto 0 auto;
+}
+
+#info {
+	color: white;
+	font-weight: 400;
+	padding: 0 0 3rem 0;
+}
+
+a, a:visited {
+	color: white;
+	text-decoration: underline;
+}

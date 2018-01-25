@@ -1,0 +1,10 @@
+.DS_Store
+.Rhistory
+.Rproj.user/
+nz-small-maps.Rproj
+outputs-edited-cropped/
+processed-data.RData
+outputs/
+data/
+outputs-edited/
+outputs-special/

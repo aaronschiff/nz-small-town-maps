@@ -1,0 +1,53 @@
+</div>
+<script>
+	function scaleImages() {
+		// Minimum horizontal margin of maps
+		var map_horizontal_margin = 10;	// Pixels on either side
+
+		// Width of the page
+		var w = window,
+	    d = document,
+	    e = d.documentElement,
+	    g = d.getElementsByTagName('body')[0],
+	    page_width = w.innerWidth || e.clientWidth || g.clientWidth;
+
+	    // Original widths of the maps
+		var town_maps = d3.selectAll(".town-img");
+		var town_maps_widths = town_maps.nodes().map(function(d){
+			return d.getAttribute("data-original-width");
+		});
+		var town_maps_widths_max = town_maps_widths.reduce(function(a, b){
+			return Math.max(a, b);
+		});
+
+		// Work out scaling if necessary
+		if (page_width <= town_maps_widths_max + 2 * map_horizontal_margin) {
+			var town_maps_scaling_factor = page_width / (town_maps_widths_max + 2 * map_horizontal_margin);
+
+			town_maps.nodes().forEach(function(d) {
+				aspect = d.getAttribute("data-original-height") / d.getAttribute("data-original-width");
+				new_width = d.getAttribute("data-original-width") * town_maps_scaling_factor;
+				new_height = new_width * aspect;
+				new_width = Math.round(new_width);
+				new_height = Math.round(new_height);
+				d.width = new_width; 
+				d.height = new_height;
+			});
+
+			d3.selectAll(".overview-map-img").nodes().forEach(function(d) {
+				aspect = d.getAttribute("data-original-height") / d.getAttribute("data-original-width");
+				new_width = d.getAttribute("data-original-width") * Math.max(0.8, town_maps_scaling_factor);
+				new_height = new_width * aspect;
+				new_width = Math.round(new_width);
+				new_height = Math.round(new_height);
+				d.width = new_width; 
+				d.height = new_height;
+			});
+		}
+	}
+
+	scaleImages();
+	window.addEventListener("resize", scaleImages);
+</script>
+</body>
+</html>
