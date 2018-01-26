@@ -33,10 +33,15 @@ h2 {
 
 .town-div {
 	padding: 0 0 10rem 0;
+	overflow-x: scroll;
+	overflow-y: auto;
+	white-space: nowrap;
+	-webkit-overflow-scrolling: touch;
 }
 
 .town-img {
   margin: 3rem auto 3rem auto;
+  display: inline-block;
 }
 
 .overview-map-img {

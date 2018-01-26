@@ -3,6 +3,7 @@
 	function scaleImages() {
 		// Minimum horizontal margin of maps
 		var map_horizontal_margin = 10;	// Pixels on either side
+		var allowed_horizontal_scroll = 100; // Pixels 
 
 		// Width of the page
 		var w = window,
@@ -21,8 +22,8 @@
 		});
 
 		// Work out scaling if necessary
-		if (page_width <= town_maps_widths_max + 2 * map_horizontal_margin) {
-			var town_maps_scaling_factor = page_width / (town_maps_widths_max + 2 * map_horizontal_margin);
+		if (page_width + allowed_horizontal_scroll <= town_maps_widths_max + 2 * map_horizontal_margin) {
+			var town_maps_scaling_factor = (page_width + allowed_horizontal_scroll) / (town_maps_widths_max + 2 * map_horizontal_margin);
 
 			town_maps.nodes().forEach(function(d) {
 				aspect = d.getAttribute("data-original-height") / d.getAttribute("data-original-width");
@@ -46,8 +47,8 @@
 		}
 	}
 
-	scaleImages();
-	window.addEventListener("resize", scaleImages);
+	// scaleImages();
+	// window.addEventListener("resize", scaleImages);
 </script>
 </body>
 </html>
