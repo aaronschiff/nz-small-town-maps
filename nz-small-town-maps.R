@@ -286,6 +286,7 @@ generate_gallery <- function(output_directory) {
     wrap_html_tag(
       paste("<p>Made by <a href='http://schiff.co.nz'>Aaron Schiff</a> with data from LINZ and Statistics New Zealand.</p>", 
             "<p>All images are licensed <a href='https://creativecommons.org/licenses/by/4.0/'>CC BY 4.0</a>.</p>", 
+            "<p>I wrote a bit more about this <a href='https://medium.com/aaron-schiffs-blog/approximate-maps-of-the-small-towns-of-aotearoa-9c2e241606b9'>here</a>. The R code is <a href='https://github.com/aaronschiff/nz-small-town-maps'>here</a>.</p>",
             sep = "\n"), 
       "div", 
       "id = 'info'"
