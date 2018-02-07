@@ -1,5 +1,7 @@
 # Make maps of NZ's smaller urban areas using LINZ primary parcels data
 
+# This version includes code for producing high-quality images suitable for printing
+
 # -----------------------------------------------------------------------------
 # Setup
 rm(list = ls())
@@ -305,7 +307,52 @@ generate_gallery <- function(output_directory) {
             overwrite = TRUE)
 }
 generate_gallery("outputs-edited-cropped")
+# -----------------------------------------------------------------------------
 
 
+# -----------------------------------------------------------------------------
+# Print quality output for one town
+# Unlike web output this allows each town to be plotted on a different scale
+# output_width and output_height assume portrait orientation and they will be reversed if landscape is more appropriate
 
-
+print_output <- function(i, output_directory, output_width, output_height) {
+  # Gather data for the selected area
+  area_name <- small_urban_area_names[i]
+  area_shape <- small_urban_areas_buffered[i, ]
+  area_parcels <- plot_parcels[[i]]
+  
+  # Set up output file
+  area_bbox <- expand_bbox(st_bbox(area_shape))
+  portrait_orientation <- TRUE
+  if ((area_bbox["xmax"] - area_bbox["xmin"]) > (area_bbox["ymax"] - area_bbox["ymin"])) {
+    portrait_orientation <- FALSE
+  }
+  if (portrait_orientation) {
+    png(paste0(output_directory, "/", area_name, ".png"), width = output_width, height = output_height)
+  } else {
+    png(paste0(output_directory, "/", area_name, ".png"), width = output_height, height = output_width)
+  }
+  par(mar = c(0, 0, 0, 0), 
+      bg = background_colour)
+  plot(st_as_sfc(area_bbox), col = NA, border = NA, xaxs = "i", yaxs = "i")
+  
+  # Plot property parcels
+  area_parcels_property <- filter(area_parcels, !(parcel_int %in% c("Road", 
+                                                                    "Road Strata", 
+                                                                    "Hydro", 
+                                                                    "Streambed", 
+                                                                    "Riverbed")))
+  area_parcels_property$area <- as.numeric(st_area(area_parcels_property))
+  area_parcels_residential <- filter(area_parcels_property, 
+                                     area < max_plot_parcel_size, 
+                                     area > min_plot_parcel_size)
+  plot(st_geometry(area_parcels_residential), 
+       col = parcel_colour, 
+       border = background_colour, 
+       lwd = parcel_lwd, 
+       add = TRUE)
+  
+  # Plot finished 
+  dev.off()
+}
+# -----------------------------------------------------------------------------
