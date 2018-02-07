@@ -315,14 +315,31 @@ generate_gallery("outputs-edited-cropped")
 # Unlike web output this allows each town to be plotted on a different scale
 # output_width and output_height assume portrait orientation and they will be reversed if landscape is more appropriate
 
-print_output <- function(i, output_directory, output_width, output_height) {
+print_output <- function(i, output_directory, output_width = 3508, output_height = 4960) {
   # Gather data for the selected area
   area_name <- small_urban_area_names[i]
   area_shape <- small_urban_areas_buffered[i, ]
   area_parcels <- plot_parcels[[i]]
+  area_bbox <- expand_bbox(st_bbox(area_shape))
+  
+  # Work out lwd scaling factor
+  all_bboxes <- matrix(NA, 
+                       nrow = nrow(small_urban_areas_buffered), 
+                       ncol = 4, 
+                       dimnames = list(NULL, c("xmin", "ymin", "xmax", "ymax")))
+  for (j in 1:nrow(small_urban_areas_buffered)) {
+    all_bboxes[j, ] <- expand_bbox(st_bbox(small_urban_areas_buffered[j, ]))
+  }
+  all_bboxes <- as.tibble(all_bboxes)
+  all_bboxes %<>% mutate(xlength = xmax - xmin, 
+                         ylength = ymax - ymin) %>%
+    mutate(maxlength = ifelse(xlength > ylength, xlength, ylength))
+  overall_max_length <- max(all_bboxes$maxlength)
+  overall_min_length <- min(all_bboxes$maxlength)
+  lwd_weight <- (as.numeric(all_bboxes[i, "maxlength"]) - overall_min_length) / (overall_max_length - overall_min_length)
+  lwd_scalar <- round(1 * lwd_weight + 6 * (1 - lwd_weight), 1)
   
   # Set up output file
-  area_bbox <- expand_bbox(st_bbox(area_shape))
   portrait_orientation <- TRUE
   if ((area_bbox["xmax"] - area_bbox["xmin"]) > (area_bbox["ymax"] - area_bbox["ymin"])) {
     portrait_orientation <- FALSE
@@ -349,7 +366,7 @@ print_output <- function(i, output_directory, output_width, output_height) {
   plot(st_geometry(area_parcels_residential), 
        col = parcel_colour, 
        border = background_colour, 
-       lwd = parcel_lwd, 
+       lwd = parcel_lwd * lwd_scalar, 
        add = TRUE)
   
   # Plot finished 
